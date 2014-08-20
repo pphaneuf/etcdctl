@@ -9,6 +9,7 @@ import (
 
 var lsCmd *cobra.Command
 var lsRecursiveFlag bool
+var getSortFlag bool
 
 func init() {
 	lsCmd = &cobra.Command{
@@ -20,6 +21,7 @@ func init() {
 	}
 
 	lsCmd.Flags().BoolVar(&lsRecursiveFlag, "recursive", false, "returns all values for key and child keys")
+	lsCmd.Flags().BoolVar(&getSortFlag, "sort", false, "returns result in sorted order")
 }
 
 func LsCommand() *cobra.Command {
@@ -49,9 +51,10 @@ func lsCommandFunc(cmd *cobra.Command, args []string, client *etcd.Client) (*etc
 		key = args[0]
 	}
 	recursive := lsRecursiveFlag
+	sorted := getSortFlag
 
 	// Retrieve the value from the server.
-	return client.Get(key, false, recursive)
+	return client.Get(key, sorted, recursive)
 }
 
 // rPrint recursively prints out the nodes in the node structure.
